@@ -1,0 +1,7 @@
+scapy
+flask
+ipaddress
+netifaces
+requests
+zeroconf
+Flask-SQLAlchemy

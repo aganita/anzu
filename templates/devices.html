@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Devices</title>
+</head>
+<body>
+    <h1>Navigation</h1>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/alerts">Alerts</a></li>
+        </ul>
+    </nav>
+        <h1>Devices</h1>
+        {% for device in devices %}
+        <p>{{ device }}</p>
+        {% endfor %}
+</body>
+</html>
