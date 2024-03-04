@@ -78,13 +78,13 @@ def about():
     return render_template("public/about.html", form=form)
 
 
-@blueprint.route('/devices')
-def show_devices():
+@blueprint.route('/devices/')
+def devices():
     devices = detect_devices()
     return render_template('public/devices.html', devices=devices)
 
 
-@blueprint.route('/alerts')
-def show_alerts():
+@blueprint.route('/alerts/')
+def alerts():
     alerts = read_suricata_alerts()
     return render_template('public/alerts.html', alerts=alerts)

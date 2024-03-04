@@ -54,8 +54,6 @@ def get_device_info_by_mac(mac_address):
         return None
 
 
-
-
 def detect_devices():
     target_ip = get_network_range() #"192.168.1.0/24"
     devices = []
@@ -87,7 +85,72 @@ def detect_devices():
 #     return devices
 
 def read_suricata_alerts():
-    return "success"
+    harcoded_alerts_for_testing_the_ui = [
+{
+  "timestamp": "2023-03-15T15:40:55.000000+0000",
+  "event_type": "alert",
+  "src_ip": "198.51.100.24",
+  "src_port": 44332,
+  "dest_ip": "10.10.10.5",
+  "dest_port": 80,
+  "proto": "TCP",
+  "alert": {
+    "action": "blocked",
+    "gid": 1,
+    "signature_id": 2101608,
+    "rev": 5,
+    "signature": "GPL SQL injection attempt",
+    "category": "Web Application Attack",
+    "severity": 1
+  },
+  "flow_id": 987654321098765,
+  "in_iface": "eth1",
+  "http": {
+    "hostname": "www.example.com",
+    "url": "/index.php",
+    "http_user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+    "http_content_type": "application/x-www-form-urlencoded",
+    "http_method": "POST",
+    "protocol": "HTTP/1.1",
+    "length": 0
+  }
+},
+{
+  "timestamp": "2023-03-15T14:25:30.000000+0000",
+  "event_type": "alert",
+  "src_ip": "192.168.1.100",
+  "src_port": 22,
+  "dest_ip": "192.168.1.1",
+  "dest_port": 51322,
+  "proto": "TCP",
+  "alert": {
+    "action": "allowed",
+    "gid": 1,
+    "signature_id": 2010935,
+    "rev": 3,
+    "signature": "ET SCAN Potential SSH Scan",
+    "category": "Attempted Information Leak",
+    "severity": 2
+  },
+  "flow_id": 123456789012345,
+  "in_iface": "eth0",
+  "tcp": {
+    "tcp_flags": "PA",
+    "tcp_flags_ts": "PA",
+    "tcp_flags_tc": "PA",
+    "syn": "false",
+    "fin": "false",
+    "psh": "true",
+    "ack": "true",
+    "urg": "false",
+    "ece": "false",
+    "cwr": "false"
+  }
+}
+
+    ]
+
+    return harcoded_alerts_for_testing_the_ui
     # alerts_file_path = '/var/log/suricata/eve.json'
     # alerts = []
     # try:
