@@ -3,10 +3,25 @@
 {% block content %}
 <div class="container">
     <h1 class="mt-5">Devices running in your network</h1>
-    {% for device in devices %}
     <div class="row">
-        <p class="lead">{{ device }}</p>
-      </div>
-    {% endfor %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">MAC</th>
+            <th scope="col">IP</th>
+            <th scope="col">Manufacturer</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for device in devices %}
+          <tr>
+            <th scope="row">{{ device.mac }}</th>
+            <td>{{ device.ip }}</td>
+            <td>{{ device.manuf }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
 </div>
 {% endblock %}

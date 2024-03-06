@@ -5,7 +5,7 @@
     <h1 class="mt-5">Current Alerts</h1>
     {% for alert in alerts %}
     <div class="row">
-        <p class="lead">{{ alert }}</p>
+        <p class="lead">{{ alert.timestamp }}</p>
       </div>
     {% endfor %}
 </div>

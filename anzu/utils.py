@@ -62,8 +62,8 @@ def detect_devices():
     packet = ether/arp
     result = scapy.srp(packet, timeout=3, verbose=False)[0]
     for sent, received in result:
-        device_type = get_device_info_by_mac(received.hwsrc)
-        devices.append({'ip': received.psrc, 'mac': received.hwsrc, 'device manufacturer': device_type if device_type is not None else "Unknown"})
+        manuf = get_device_info_by_mac(received.hwsrc)
+        devices.append({'ip': received.psrc, 'mac': received.hwsrc, 'device manufacturer': manuf if manuf is not None else "Unknown"})
     return devices
 
 # def detect_devices():
@@ -77,11 +77,11 @@ def detect_devices():
 #         mac_address = received.hwsrc
 #         existing_device = Device.query.filter_by(mac_address=mac_address).first()
 #         if not existing_device:
-#             device_type = get_device_info_by_mac(mac_address)
-#             new_device = Device(mac_address=mac_address, device_type=device_type if device_type else "Unknown")
+#             manuf = get_device_info_by_mac(mac_address)
+#             new_device = Device(mac_address=mac_address, manuf=manuf if manuf else "Unknown")
 #             db.session.add(new_device)
 #             db.session.commit()
-#         devices.append({'ip': received.psrc, 'mac': mac_address, 'device manufacturer': device_type if device_type else "Unknown"})
+#         devices.append({'ip': received.psrc, 'mac': mac_address, 'device manufacturer': manuf if manuf else "Unknown"})
 #     return devices
 
 def read_suricata_alerts():
