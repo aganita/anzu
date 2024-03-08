@@ -62,8 +62,8 @@ def detect_devices():
     packet = ether/arp
     result = scapy.srp(packet, timeout=3, verbose=False)[0]
     for sent, received in result:
-        manuf = get_device_info_by_mac(received.hwsrc)
-        devices.append({'ip': received.psrc, 'mac': received.hwsrc, 'device manufacturer': manuf if manuf is not None else "Unknown"})
+        manufacturer = get_device_info_by_mac(received.hwsrc)
+        devices.append({'ip': received.psrc, 'mac': received.hwsrc, 'manufacturer': manufacturer if manufacturer is not None else "Unknown"})
     return devices
 
 # def detect_devices():
@@ -77,46 +77,18 @@ def detect_devices():
 #         mac_address = received.hwsrc
 #         existing_device = Device.query.filter_by(mac_address=mac_address).first()
 #         if not existing_device:
-#             manuf = get_device_info_by_mac(mac_address)
-#             new_device = Device(mac_address=mac_address, manuf=manuf if manuf else "Unknown")
+#             manufacturer = get_device_info_by_mac(mac_address)
+#             new_device = Device(mac_address=mac_address, manuf=manufacturer if manufacturer else "Unknown")
 #             db.session.add(new_device)
 #             db.session.commit()
-#         devices.append({'ip': received.psrc, 'mac': mac_address, 'device manufacturer': manuf if manuf else "Unknown"})
+#         devices.append({'ip': received.psrc, 'mac': mac_address, 'manufacturer': manufacturer if manufacturer else "Unknown"})
 #     return devices
 
 def read_suricata_alerts():
     harcoded_alerts_for_testing_the_ui = [
+
 {
-  "timestamp": "2023-03-15T15:40:55.000000+0000",
-  "event_type": "alert",
-  "src_ip": "198.51.100.24",
-  "src_port": 44332,
-  "dest_ip": "10.10.10.5",
-  "dest_port": 80,
-  "proto": "TCP",
-  "alert": {
-    "action": "blocked",
-    "gid": 1,
-    "signature_id": 2101608,
-    "rev": 5,
-    "signature": "GPL SQL injection attempt",
-    "category": "Web Application Attack",
-    "severity": 1
-  },
-  "flow_id": 987654321098765,
-  "in_iface": "eth1",
-  "http": {
-    "hostname": "www.example.com",
-    "url": "/index.php",
-    "http_user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
-    "http_content_type": "application/x-www-form-urlencoded",
-    "http_method": "POST",
-    "protocol": "HTTP/1.1",
-    "length": 0
-  }
-},
-{
-  "timestamp": "2023-03-15T14:25:30.000000+0000",
+  "timestamp": "2024-03-03T14:25:30.000000+0000",
   "event_type": "alert",
   "src_ip": "192.168.1.100",
   "src_port": 22,
@@ -146,7 +118,34 @@ def read_suricata_alerts():
     "ece": "false",
     "cwr": "false"
   }
-}
+}, 
+  {
+    "timestamp": "2024-03-03T22:24:37.251547+0100",
+    "flow_id": 586497171462735,
+    "pcap_cnt": 53381,
+    "event_type": "alert",
+    "src_ip": "192.168.2.14",
+    "src_port": 50096,
+    "dest_ip": "209.53.113.5",
+    "dest_port": 80,
+    "proto": "TCP",
+    "metadata": {
+      "flowbits": [
+        "http.dottedquadhost"
+      ]
+    },
+    "tx_id": 4,
+    "alert": {
+      "action": "allowed",
+      "gid": 1,
+      "signature_id": 2018358,
+      "rev": 10,
+      "signature": "ET HUNTING GENERIC SUSPICIOUS POST to Dotted Quad with Fake Browser 1",
+      "category": "Potentially Bad Traffic",
+      "severity": 2
+    },
+    "app_proto": "http"
+  }
 
     ]
 

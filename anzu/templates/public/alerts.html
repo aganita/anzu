@@ -2,11 +2,24 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="mt-5">Current Alerts</h1>
-    {% for alert in alerts %}
-    <div class="row">
-        <p class="lead">{{ alert.timestamp }}</p>
-      </div>
-    {% endfor %}
+    <h1 class="mt-5">Alerts</h1>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">When</th>
+          <th scope="col">Alert type</th>
+          <th scope="col">Alert type Detailes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for alert in alerts %}
+        <tr>
+          <th scope="row">{{ alert.timestamp }}</th>
+          <td>{{ alert.alert.category }}</td>
+          <td>{{ alert.alert.signature }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
 </div>
 {% endblock %}
