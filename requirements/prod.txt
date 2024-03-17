@@ -45,3 +45,4 @@ ipaddress
 netifaces
 requests
 zeroconf
+pysnmp

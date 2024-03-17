@@ -61,3 +61,20 @@ class User(UserMixin, PkModel):
     def __repr__(self):
         """Represent instance as a unique string."""
         return f"<User({self.username!r})>"
+
+
+class Device(PkModel):
+    """A device on the network."""
+
+    __tablename__ = "devices"
+    ip_address = Column(db.String(80), unique=True, nullable=False)
+    mac_address = Column(db.String(80), unique=True, nullable=False)
+    manufacturer = Column(db.String(80), nullable=False)
+
+    def __init__(self, ip_address, mac_address, manufacturer, **kwargs):
+        """Create instance."""
+        super().__init__(ip_address=ip_address, mac_address=mac_address, manufacturer=manufacturer, **kwargs)
+
+    def __repr__(self):
+        """Represent instance as a unique string."""
+        return f"<Device({self.ip_address!r})>"

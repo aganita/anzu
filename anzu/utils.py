@@ -5,6 +5,8 @@ import scapy.all as scapy
 import netifaces
 import ipaddress
 import requests
+from anzu.user.models import Device
+from anzu.database import db as _db
 
 
 def flash_errors(form, category="warning"):
@@ -54,35 +56,39 @@ def get_device_info_by_mac(mac_address):
         return None
 
 
+# def detect_devices():
+#     target_ip = get_network_range() #"192.168.1.0/24"
+#     devices = []
+#     arp = scapy.ARP(pdst=target_ip)
+#     ether = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
+#     packet = ether/arp
+#     result = scapy.srp(packet, timeout=3, verbose=False)[0]
+#     for sent, received in result:
+#         manufacturer = get_device_info_by_mac(received.hwsrc)
+#         devices.append({'ip': received.psrc, 'mac': received.hwsrc, 'manufacturer': manufacturer if manufacturer is not None else "Unknown"})
+#     return devices
+
 def detect_devices():
-    target_ip = get_network_range() #"192.168.1.0/24"
+    target_ip = get_network_range()
     devices = []
     arp = scapy.ARP(pdst=target_ip)
     ether = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
     packet = ether/arp
     result = scapy.srp(packet, timeout=3, verbose=False)[0]
     for sent, received in result:
-        manufacturer = get_device_info_by_mac(received.hwsrc)
-        devices.append({'ip': received.psrc, 'mac': received.hwsrc, 'manufacturer': manufacturer if manufacturer is not None else "Unknown"})
+        mac_address = received.hwsrc
+        existing_device = Device.query.filter_by(mac_address=mac_address).first()
+        print(f"Existing device: {existing_device} for mac: {mac_address}")
+        if not existing_device:
+            print(f"New device detected: {mac_address}")
+            manufacturer = get_device_info_by_mac(mac_address)
+            new_device = Device(ip_address=received.psrc, mac_address=mac_address, manufacturer=manufacturer if manufacturer else "Unknown")
+            _db.session.add(new_device)
+            _db.session.commit()
+            devices.append({'ip': received.psrc, 'mac': mac_address, 'manufacturer': manufacturer if manufacturer else "Unknown"})
+        else:
+            devices.append({'ip': received.psrc, 'mac': mac_address, 'manufacturer': existing_device.manufacturer})
     return devices
-
-# def detect_devices():
-#     target_ip = get_network_range()
-#     devices = []
-#     arp = ARP(pdst=target_ip)
-#     ether = Ether(dst="ff:ff:ff:ff:ff:ff")
-#     packet = ether/arp
-#     result = srp(packet, timeout=3, verbose=False)[0]
-#     for sent, received in result:
-#         mac_address = received.hwsrc
-#         existing_device = Device.query.filter_by(mac_address=mac_address).first()
-#         if not existing_device:
-#             manufacturer = get_device_info_by_mac(mac_address)
-#             new_device = Device(mac_address=mac_address, manuf=manufacturer if manufacturer else "Unknown")
-#             db.session.add(new_device)
-#             db.session.commit()
-#         devices.append({'ip': received.psrc, 'mac': mac_address, 'manufacturer': manufacturer if manufacturer else "Unknown"})
-#     return devices
 
 def read_suricata_alerts():
     harcoded_alerts_for_testing_the_ui = [

@@ -9,7 +9,9 @@
           <tr>
             <th scope="col">MAC</th>
             <th scope="col">IP</th>
+            <th scope="col">Type</th>
             <th scope="col">Manufacturer</th>
+            <th scope="col">Open Ports</th>
           </tr>
         </thead>
         <tbody>
@@ -17,7 +19,9 @@
           <tr>
             <th scope="row">{{ device.mac }}</th>
             <td>{{ device.ip }}</td>
+            <td>{{ device.type }}</td>
             <td>{{ device.manufacturer }}</td>
+            <td>{{ device.open_ports }}</td>
           </tr>
           {% endfor %}
         </tbody>
