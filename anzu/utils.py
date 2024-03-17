@@ -7,7 +7,8 @@ import ipaddress
 import requests
 from anzu.user.models import Device
 from anzu.database import db as _db
-
+import socket
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 def flash_errors(form, category="warning"):
     """Flash all errors for a form."""
@@ -18,6 +19,8 @@ def flash_errors(form, category="warning"):
 
 def get_network_range(interface=None):
     """Return the network's IPv4 range in CIDR notation."""
+    # TODO: remove ths line
+    Device.query.delete()
     if interface is None:
         interface = scapy.conf.iface
     
@@ -41,6 +44,7 @@ def get_network_range(interface=None):
 
 
 def get_device_info_by_mac(mac_address):
+    """Return information about a device based on its MAC address."""
     try:
         url = f"https://api.maclookup.app/v2/macs/{mac_address}"
         response = requests.get(url)
@@ -56,19 +60,38 @@ def get_device_info_by_mac(mac_address):
         return None
 
 
-# def detect_devices():
-#     target_ip = get_network_range() #"192.168.1.0/24"
-#     devices = []
-#     arp = scapy.ARP(pdst=target_ip)
-#     ether = scapy.Ether(dst="ff:ff:ff:ff:ff:ff")
-#     packet = ether/arp
-#     result = scapy.srp(packet, timeout=3, verbose=False)[0]
-#     for sent, received in result:
-#         manufacturer = get_device_info_by_mac(received.hwsrc)
-#         devices.append({'ip': received.psrc, 'mac': received.hwsrc, 'manufacturer': manufacturer if manufacturer is not None else "Unknown"})
-#     return devices
+def check_port(ip, port):
+    """
+    Attempts to establish a connection to the specified port and returns the port if open.
+    """
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.settimeout(1)  # Set timeout to 1 second
+        result = sock.connect_ex((ip, port))
+        if result == 0:
+            return port  # Port is open
+    return None  # Port is closed or filtered
+
+def scan_ports(ip, start_port, end_port):
+    """
+    Scans ports on a given IP address from start_port to end_port and returns a list of open ports.
+    """
+    open_ports = []
+    futures = []
+
+    with ThreadPoolExecutor(max_workers=50) as executor:
+        for port in range(start_port, end_port + 1):
+            futures.append(executor.submit(check_port, ip, port))
+
+    for future in as_completed(futures):
+        result = future.result()
+        if result:
+            open_ports.append(result)
+
+    return open_ports
+
 
 def detect_devices():
+    """Detect devices on the network using ARP requests and save in DB."""
     target_ip = get_network_range()
     devices = []
     arp = scapy.ARP(pdst=target_ip)
@@ -82,13 +105,19 @@ def detect_devices():
         if not existing_device:
             print(f"New device detected: {mac_address}")
             manufacturer = get_device_info_by_mac(mac_address)
-            new_device = Device(ip_address=received.psrc, mac_address=mac_address, manufacturer=manufacturer if manufacturer else "Unknown")
+            open_ports_list = scan_ports(received.psrc, 1, 65535)
+            open_ports_str = ",".join(str(port) for port in open_ports_list)
+            print(f"Open ports: {open_ports_str}")
+            type = "Unknown"
+            new_device = Device(mac_address=mac_address, ip_address=received.psrc, type=type, manufacturer=manufacturer if manufacturer else "Unknown", open_ports=open_ports_str)
             _db.session.add(new_device)
             _db.session.commit()
-            devices.append({'ip': received.psrc, 'mac': mac_address, 'manufacturer': manufacturer if manufacturer else "Unknown"})
+            devices.append({'mac': mac_address, 'ip': received.psrc, 'type': type, 'manufacturer': manufacturer if manufacturer else "Unknown", 'open_ports': open_ports_str})
         else:
-            devices.append({'ip': received.psrc, 'mac': mac_address, 'manufacturer': existing_device.manufacturer})
+            devices.append({'mac': mac_address, 'ip': received.psrc, 'type': existing_device.type, 'manufacturer': existing_device.manufacturer, 'open_ports': existing_device.open_ports})
     return devices
+
+
 
 def read_suricata_alerts():
     harcoded_alerts_for_testing_the_ui = [

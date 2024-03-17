@@ -67,14 +67,17 @@ class Device(PkModel):
     """A device on the network."""
 
     __tablename__ = "devices"
-    ip_address = Column(db.String(80), unique=True, nullable=False)
     mac_address = Column(db.String(80), unique=True, nullable=False)
+    ip_address = Column(db.String(80), unique=True, nullable=False)
+    type = Column(db.String(80), nullable=True)
     manufacturer = Column(db.String(80), nullable=False)
+    open_ports = Column(db.String(80), nullable=True)
 
-    def __init__(self, ip_address, mac_address, manufacturer, **kwargs):
+    def __init__(self, mac_address, ip_address, type, manufacturer, open_ports, **kwargs):
         """Create instance."""
-        super().__init__(ip_address=ip_address, mac_address=mac_address, manufacturer=manufacturer, **kwargs)
+        super().__init__(mac_address=mac_address, ip_address=ip_address, type=type, manufacturer=manufacturer, open_ports=open_ports, **kwargs)
 
     def __repr__(self):
         """Represent instance as a unique string."""
-        return f"<Device({self.ip_address!r})>"
+        return f"<Device({self.mac_address!r})>"
+
