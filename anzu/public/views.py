@@ -10,8 +10,9 @@ from flask import (
     url_for,
 )
 from flask_login import login_required, login_user, logout_user
+from flask_wtf.csrf import CSRFProtect
 
-from anzu.extensions import login_manager
+from anzu.extensions import login_manager, csrf_protect
 from anzu.public.forms import LoginForm
 from anzu.user.forms import RegisterForm
 from anzu.user.models import User
@@ -88,3 +89,10 @@ def devices():
 def alerts():
     alerts = read_suricata_alerts()
     return render_template('public/alerts.html', alerts=alerts)
+
+
+@blueprint.route('/alerts/submit', methods=['POST'])
+@csrf_protect.exempt
+def submit_alert():
+    data = request.json
+    return "", 201

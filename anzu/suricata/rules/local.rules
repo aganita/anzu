@@ -1,0 +1,12 @@
+# Detects ICMP Echo Requests, commonly used for ping operations
+alert icmp any any -> any any (msg: "ICMP Packet found"; sid:1000004;)
+
+# Detects multiple SSH connection attempts to the same destination in a short period, which could indicate a brute force attack
+alert tcp any any -> any any (msg:"Possible SSH Brute Force Attempt"; flow:to_server,established; flags:PA; content:"SSH-2.0"; nocase; threshold: type both, track by_src, count 5, seconds 60; sid:1000002;)
+
+# Detects HTTP requests that contain basic SQL commands, which could be indicative of an SQL injection attack attempt
+alert http any any -> any any (msg:"Possible SQL Injection Attempt"; flow:to_server,established; content:"SELECT"; nocase; content:"FROM"; distance:0; nocase; sid:1000003;)
+
+# Detects connections to tor port 9050 (relays)
+alert tcp any any -> any 9050 (msg:"Potential TOR Daemon Activity"; sid:1000005;)
+

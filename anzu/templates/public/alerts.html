@@ -7,16 +7,20 @@
       <thead>
         <tr>
           <th scope="col">When</th>
-          <th scope="col">Alert type</th>
-          <th scope="col">Alert type Detailes</th>
+          <th scope="col">Alert</th>
+          <th scope="col">Severity</th>
+          <th scope="col">Explanation</th>
+          <th scope="col">Remediation</th>
         </tr>
       </thead>
       <tbody>
         {% for alert in alerts %}
         <tr>
           <th scope="row">{{ alert.timestamp }}</th>
-          <td>{{ alert.alert.category }}</td>
-          <td>{{ alert.alert.signature }}</td>
+          <td>{{ alert.name }}</td>
+          <td>{{ alert.severity }}</td>
+          <td>{{ alert.explanation }}</td>
+          <td>{{ alert.remediation }}</td>
         </tr>
         {% endfor %}
       </tbody>

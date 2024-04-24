@@ -8,6 +8,8 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from anzu.database import Column, PkModel, db, reference_col, relationship
 from anzu.extensions import bcrypt
 
+import uuid
+
 
 class Role(PkModel):
     """A role for a user."""
@@ -68,16 +70,54 @@ class Device(PkModel):
 
     __tablename__ = "devices"
     mac_address = Column(db.String(80), unique=True, nullable=False)
-    ip_address = Column(db.String(80), unique=True, nullable=False)
+    ip_address = Column(db.String(80), unique=False, nullable=False)
     type = Column(db.String(80), nullable=True)
     manufacturer = Column(db.String(80), nullable=False)
     open_ports = Column(db.String(80), nullable=True)
+    risk_score = Column(db.String(80), nullable=True)
 
-    def __init__(self, mac_address, ip_address, type, manufacturer, open_ports, **kwargs):
+    def __init__(self, mac_address, ip_address, type, manufacturer, open_ports, risk_score, **kwargs):
         """Create instance."""
-        super().__init__(mac_address=mac_address, ip_address=ip_address, type=type, manufacturer=manufacturer, open_ports=open_ports, **kwargs)
+        super().__init__(mac_address=mac_address, ip_address=ip_address, type=type, manufacturer=manufacturer, open_ports=open_ports, risk_score=risk_score **kwargs)
 
     def __repr__(self):
         """Represent instance as a unique string."""
         return f"<Device({self.mac_address!r})>"
+    
+    @classmethod
+    def update_device(cls, mac_address, ip_address=None, type=None, manufacturer=None, open_ports=None, risk_score=None):
+        """Update device details."""
+        device = cls.query.filter_by(mac_address=mac_address).first()
+        if not device:
+            return False  # Device not found
 
+        if ip_address is not None:
+            device.ip_address = ip_address
+        if type is not None:
+            device.type = type
+        if manufacturer is not None:
+            device.manufacturer = manufacturer
+        if open_ports is not None:
+            device.open_ports = open_ports
+        if risk_score is not None:
+            device.risk_score = risk_score
+
+        db.session.commit()
+        return True
+
+
+# class Alerts(PkModel):
+#     """Network alerts."""
+
+#     __tablename__ = "alerts"
+#     id = Column(db.String(80), unique=True, nullable=False)
+#     name = Column(db.String(160), unique=True, nullable=False)
+#     description = Column(db.String(300), unique=False, nullable=True)
+
+#     def __init__(self, name, description, **kwargs):
+#         """Create instance."""
+#         super().__init__(id=uuid.uuid1(), name=name, description=description, **kwargs)
+
+#     def __repr__(self):
+#         """Represent instance as a unique string."""
+#         return f"<Alerts({self.name!r})>"

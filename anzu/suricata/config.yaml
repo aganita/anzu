@@ -1,0 +1,16 @@
+%YAML 1.1
+---
+outputs:
+- fast:
+    append: true
+    enabled: true
+    filename: fast.log
+- eve-log:
+    enabled: true
+    filename: /tmp/suricata.sock
+    filetype: unix_stream
+    types:
+    - alert:
+        payload: true
+        payload-buffer-size: 4kb
+        payload-printable: true

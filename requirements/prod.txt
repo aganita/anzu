@@ -46,3 +46,6 @@ netifaces
 requests
 zeroconf
 pysnmp
+uuid==1.30
+pyyaml
+psutil==5.9.8

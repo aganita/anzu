@@ -12,6 +12,7 @@
             <th scope="col">Type</th>
             <th scope="col">Manufacturer</th>
             <th scope="col">Open Ports</th>
+            <th scope="col">Risk Score</th>
           </tr>
         </thead>
         <tbody>
@@ -22,6 +23,7 @@
             <td>{{ device.type }}</td>
             <td>{{ device.manufacturer }}</td>
             <td>{{ device.open_ports }}</td>
+            <td>{{ device.risk_score }}</td>
           </tr>
           {% endfor %}
         </tbody>
