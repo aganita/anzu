@@ -34,9 +34,9 @@ $ sudo flask db init
 $ sudo flask db migrate
 $ sudo flask db upgrade
 ```
-6. Run the application
+6. Run the application.
 ```shell
-$ sudo npm start  # run the webpack dev server and flask server using concurrently
+$ sudo npm start  
 ```
 Home screen: `http://localhost:5000` 
 
