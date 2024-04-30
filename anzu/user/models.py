@@ -115,7 +115,9 @@ class Probes(PkModel):
     id = Column(db.String(80), unique=True, nullable=False)
     port = Column(db.String(80), unique=False, nullable=False)
     protocol = Column(db.String(80), unique=False, nullable=False)
-    product = Column(db.String(80), unique=True, nullable=False)
+    product = Column(db.String(160), unique=True, nullable=False)
+    brand = Column(db.String(160), unique=False, nullable=True)
+    model = Column(db.String(160), unique=False, nullable=True)
     response = Column(db.String(640), unique=True, nullable=True)
     description = Column(db.String(300), unique=False, nullable=True)
 
@@ -126,20 +128,3 @@ class Probes(PkModel):
     def __repr__(self):
         """Represent instance as a unique string."""
         return f"<robes({self.product!r})>"
-
-
-# class Alerts(PkModel):
-#     """Network alerts."""
-
-#     __tablename__ = "alerts"
-#     id = Column(db.String(80), unique=True, nullable=False)
-#     name = Column(db.String(160), unique=True, nullable=False)
-#     description = Column(db.String(300), unique=False, nullable=True)
-
-#     def __init__(self, name, description, **kwargs):
-#         """Create instance."""
-#         super().__init__(id=uuid.uuid1(), name=name, description=description, **kwargs)
-
-#     def __repr__(self):
-#         """Represent instance as a unique string."""
-#         return f"<Alerts({self.name!r})>"
