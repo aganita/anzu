@@ -7,7 +7,7 @@ outputs:
     filename: fast.log
 - eve-log:
     enabled: true
-    filename: /tmp/suricata.sock
+    filename: /Users/ani/workspace/practicum-cs6727/anzu/anzu/suricata/sock
     filetype: unix_stream
     types:
     - alert:
