@@ -107,6 +107,27 @@ class Device(PkModel):
         return True
 
 
+
+class Probes(PkModel):
+    """Probe definitions."""
+
+    __tablename__ = "probes"
+    id = Column(db.String(80), unique=True, nullable=False)
+    port = Column(db.String(80), unique=False, nullable=False)
+    protocol = Column(db.String(80), unique=False, nullable=False)
+    product = Column(db.String(80), unique=True, nullable=False)
+    response = Column(db.String(640), unique=True, nullable=True)
+    description = Column(db.String(300), unique=False, nullable=True)
+
+    def __init__(self, id, port, protocol, product, respose, description, **kwargs):
+        """Create instance."""
+        super().__init__(id=id, port=port, protocol=protocol, product=product, respose=respose, description=description, **kwargs)
+
+    def __repr__(self):
+        """Represent instance as a unique string."""
+        return f"<robes({self.product!r})>"
+
+
 # class Alerts(PkModel):
 #     """Network alerts."""
 
