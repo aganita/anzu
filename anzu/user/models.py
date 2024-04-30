@@ -78,7 +78,8 @@ class Device(PkModel):
 
     def __init__(self, mac_address, ip_address, type, manufacturer, open_ports, risk_score, **kwargs):
         """Create instance."""
-        super().__init__(mac_address=mac_address, ip_address=ip_address, type=type, manufacturer=manufacturer, open_ports=open_ports, risk_score=risk_score **kwargs)
+        print(f"Creating device ${mac_address}, ${ip_address}, ${type}, ${manufacturer}, ${open_ports}, ${risk_score}")
+        super().__init__(mac_address=mac_address, ip_address=ip_address, type=type, manufacturer=manufacturer, open_ports=open_ports, risk_score=risk_score, **kwargs)
 
     def __repr__(self):
         """Represent instance as a unique string."""

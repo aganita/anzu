@@ -7,8 +7,9 @@ Anzû (Mesopotamian Mythology): A demon in the form of a massive bird that guard
 Anzu is an IDS to enhance home network security without relying on complex, business-grade firewalls or IDS systems, which are expensive and often excessive for personal use.
 
 ## Stack
-- [Node](https://nodejs.org) `22.0.0` or newer
-- [Python](https://www.python.org) `3.12.2` or newer
+- [Node](https://nodejs.org) `22.0.0`
+- [Python](https://www.python.org) `3.12.2`
+- [Suricata](https://suricata.io/) `7.0.5`
 
 ## Run locally
 1. Install Javascript dependencies
