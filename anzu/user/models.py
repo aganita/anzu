@@ -90,7 +90,7 @@ class Device(PkModel):
         """Update device details."""
         device = cls.query.filter_by(mac_address=mac_address).first()
         if not device:
-            return False  # Device not found
+            return False
 
         if ip_address is not None:
             device.ip_address = ip_address
@@ -112,19 +112,20 @@ class Probes(PkModel):
     """Probe definitions."""
 
     __tablename__ = "probes"
-    id = Column(db.String(80), unique=True, nullable=False)
-    port = Column(db.String(80), unique=False, nullable=False)
-    protocol = Column(db.String(80), unique=False, nullable=False)
-    product = Column(db.String(160), unique=True, nullable=False)
-    brand = Column(db.String(160), unique=False, nullable=True)
-    model = Column(db.String(160), unique=False, nullable=True)
-    response = Column(db.String(640), unique=True, nullable=True)
-    description = Column(db.String(300), unique=False, nullable=True)
+    id = Column(db.String(80), unique=True, nullable=False, primary_key=True)
+    port = Column(db.String(80), nullable=False)
+    protocol = Column(db.String(80), nullable=False)
+    response = Column(db.String(640), nullable=True)
+    product = Column(db.String(160), nullable=False)
+    brand = Column(db.String(160), nullable=True)
+    model = Column(db.String(160), nullable=True)
+    description = Column(db.String(300), nullable=True)
 
-    def __init__(self, id, port, protocol, product, respose, description, **kwargs):
+    def __init__(self, port, protocol, response, product, brand, model, description, **kwargs):
         """Create instance."""
-        super().__init__(id=id, port=port, protocol=protocol, product=product, respose=respose, description=description, **kwargs)
+        id = uuid.uuid4()
+        super().__init__(id=id, port=port, protocol=protocol, response=response, product=product, brand=brand, model=model, description=description, **kwargs)
 
     def __repr__(self):
         """Represent instance as a unique string."""
-        return f"<robes({self.product!r})>"
+        return f"<robes({self.id!r})>"

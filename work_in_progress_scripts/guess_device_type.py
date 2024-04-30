@@ -39,12 +39,3 @@ def guess_device_type(open_ports):
 # Example usage
 device_type = guess_device_type(open_ports)
 print(f"Possible device types based on open ports: {device_type}")
-
-
-
- # TODO
-# - guess the devices by open ports
-# - guess devices by manufactureres
-# - guess devices by traffic  too hard?
-# - give a nice explanation for suricata alrts
-# - 
