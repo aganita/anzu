@@ -184,7 +184,8 @@ def submit_alert(alert):
         return
     
     print(f"Received new alert: {json.dumps(alert)}")
-    match alert['alert']['signature_id']:
+    signature_id = alert["alert"]["signature_id"]
+    match signature_id:
         case "1000002":
             alert = format_ssh_brute_force(alert)
         case "1000003":

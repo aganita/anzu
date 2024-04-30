@@ -44,6 +44,8 @@ docs/_build
 
 # Virtualenvs
 env/
+myenv/
+venv/
 
 # npm
 /node_modules/
